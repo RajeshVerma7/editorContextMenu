@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="StyleSheet">
+</head>
+
+<body>
+    <style>
+        .nvEditorContainer {
+            position: absolute;
+            z-index: 1000000000000000;
+            font-size: 14px;
+            text-align: center;
+            min-width: 250px;
+            background: #efefef;
+            border-radius: 3px 3px 0 0;
+            border: solid 1px #999;
+            box-shadow: 0px 3px 10px rgba(0, 0, 0, .3);
+        }
+
+        .editorHeader {
+            background: #999;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            padding: 0px 5px;
+            color: white;
+            border-radius: 3px 3px 0 0;
+        }
+
+        .close-thin:after {
+            content: '×';
+            /* UTF-8 symbol */
+        }
+
+        .close-thin:hover {
+            cursor: pointer;
+        }
+
+        .closeBtnContainer {
+            display: flex;
+            justify-content: center;
+            width: 10%;
+        }
+
+        .elName {
+            width: 90%;
+            display: flex;
+            padding: 5px;
+        }
+
+        .elName:hover {
+            cursor: move;
+        }
+
+        .cursorPointer {
+            cursor: pointer;
+            border: 1px solid #d6d8e2;
+            padding: 10px;
+            border-top: 0;
+            color: #8e8e92;
+            text-align: left;
+            padding-left: 20px;
+        }
+
+        .iconContainer {
+            padding-right: 10px;
+            color: #252525;
+        }
+    </style>
+    <!-- <script src="editorContainerStructure.js" type="text/javascript"></script> -->
+    <script src="editorContainerStructure1.js" type="text/javascript"></script>
+    <script>
+        var node = document.createElement('span');
+
+        function ChangeImage(hostEl, targetEl) {
+            this.hostEl = hostEl;
+            this.targetEl = targetEl;
+            this.addEventListeners = this.addEventListeners.bind(this);
+            this.showMessage = this.showMessage.bind(this);
+            this.addEventListeners();
+        }
+        ChangeImage.prototype.addEventListeners = function () {
+            this.hostEl.addEventListener('click', this.showMessage);
+        };
+        ChangeImage.prototype.showMessage = function () {
+            console.log('hello');
+            console.log(this.hostEl);
+            console.log(this.targetEl);
+        }
+
+        function ChangeImage1(hostEl, targetEl) {
+            this.hostEl = hostEl;
+            this.targetEl = targetEl;
+            this.addEventListeners = this.addEventListeners.bind(this);
+            this.showMessage = this.showMessage.bind(this);
+            this.addEventListeners();
+        }
+        ChangeImage1.prototype.addEventListeners = function () {
+            this.hostEl.addEventListener('click', this.showMessage);
+        };
+        ChangeImage1.prototype.showMessage = function () {
+            console.log('hello1');
+            console.log(this.hostEl);
+            console.log(this.targetEl);
+        }
+
+        function ChangeImage2(hostEl, targetEl) {
+            this.hostEl = hostEl;
+            this.targetEl = targetEl;
+            this.addEventListeners = this.addEventListeners.bind(this);
+            this.showMessage = this.showMessage.bind(this);
+            this.addEventListeners();
+        }
+        ChangeImage2.prototype.addEventListeners = function () {
+            this.hostEl.addEventListener('click', this.showMessage);
+        };
+        ChangeImage2.prototype.showMessage = function () {
+            console.log('hello2');
+            console.log(this.hostEl);
+            console.log(this.targetEl);
+            
+        }
+        var newObj = new EditorStructure({
+            header: {
+                name: 'Rajesh'
+            },
+            mainBody: {
+                options: [
+                    {
+                        name: 'Edit Text',
+                        icon: 'fa fa fa-font',
+                        event: {
+                            event: 'onclick',
+                            action: 'showMessage(true)'
+                        },
+                        instance: {
+                            instanceClass: ChangeImage,
+                            parameters: ['option', node]
+                        }
+                    },
+                    {
+                        name: 'Edit Style',
+                        icon: 'fa fa-paint-brush',
+                        event: {
+                            event: 'onclick',
+                            action: 'showMessage(true)'
+                        },
+                        instance: {
+                            instanceClass: ChangeImage1,
+                            parameters: ['option', node]
+                        }
+                    },
+                    {
+                        name: 'Hide Element',
+                        icon: 'fa fa-eye-slash',
+                        event: {
+                            event: 'onclick',
+                            action: 'showMessage(true)'
+                        },
+                        instance: {
+                            instanceClass: ChangeImage2,
+                            parameters: ['option', node]
+                        }
+                    },
+                    {
+                        name: 'Show Element',
+                        icon: 'fa fa-eye',
+                        event: {
+                            event: 'onclick',
+                            action: 'showMessage(true)'
+                        }
+                    },
+                    {
+                        name: 'Remove Element',
+                        icon: 'fa fa-paint-brush',
+                        event: {
+                            event: 'onclick',
+                            action: 'showMessage(true)'
+                        }
+                    }
+                ]
+            }
+        });
+        console.log(newObj);
+        var div = document.createElement('div');
+        div.setAttribute('class', 'nvEditorContainer');
+        div.appendChild(newObj.header.header);
+        div.appendChild(newObj.mainBody.mainEditorBody);
+        document.body.appendChild(div);
+
+
+
+        // var newObj2 = new EditorStructure({
+        //     header: {
+        //         name: 'Rajdrgdesh'
+        //     },
+        //     mainBody: {
+        //         options : ['Edit dfgdStyle', 'Edit Sdfgtyle', 'Edit Style', 'Edit Style']
+        //     },
+        //     footer: {},
+        // });
+        // var div2 = document.createElement('div');
+        // div2.setAttribute('class', 'nvEditorContainer');
+        // div2.appendChild(newObj2.header.header);
+        // div2.appendChild(newObj2.mainBody.mainEditorBody);
+        // document.body.appendChild(div2);
+    </script>
+</body>
+
+</html>
