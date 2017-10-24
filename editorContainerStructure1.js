@@ -5,44 +5,45 @@ function EditorStructure(obj) {
     var _footer = obj.footer;
     var _returnHead = false;
     var _returnBody = false;
+    var _returnfooter = false;
     var _optionArray = [];
+    var _footerBtnArray = [];
 
     if (obj && typeof obj === 'object') {
-        // if(validateObj(obj)){
-        //     init();
-        // }
-        init();
+        if(validateObj(obj)){
+            init();
+        }
     } else {
         throw new Error('not an onject');
     }
 
-    // function validateObj(obj) {
-    //     //check obj has alleast 3 keys
-    //     //maximum 3 keys (header, body, footer)
-    //     //minimum 2 keys (header, body)
-    //     if(Object.keys(obj).length < 2 || Object.keys(obj).length > 3){
-    //         throw new Error("missing parameters...");
-    //     }
+    function validateObj(obj) {
+        var objKeyArray = Object.keys(obj);
+        //check obj has alleast 3 keys
+        //maximum 3 keys (header, body, footer)
+        //minimum 2 keys (header, body)
+        if(objKeyArray.length < 1 || objKeyArray.length > 3){
+            throw new Error("missing parameters...");
+        }
 
-    //     //check all three key is object
-    //     Object.keys(obj).forEach(function(key){
-    //         if (typeof key !== 'object' && !obj[key] && obj[0] !== 'header' && obj[1] !== 'mainBody' ) {
-    //             throw new Error("required parameters is not provided...");
-    //         }
-    //         console.log(obj[0]);
-    //         if(!obj[0].name){
-    //             obj[0].name = 'EditorMenu';
-    //         }
-    //     });
-
-    //     return obj;
-    // }
-
-    function init() {
-        createStructure();
+        //check all three key is object
+        objKeyArray.forEach(function(key){
+            if (typeof key !== 'object' && !obj[key]) {
+                throw new Error("required parameters is not provided...");
+            }
+        });
+        if(objKeyArray.indexOf('header') === -1){
+            if(objKeyArray.indexOf('mainBody') === -1){
+                if(objKeyArray.indexOf('footer') === -1){
+                    throw new Error("missing parameters...");
+                }
+            }
+        }
+        
+        return obj;
     }
 
-    function createStructure() {
+    function init() {
         if (typeof _header === 'object') {
             _returnHead = createHeader(_header);
         }
@@ -50,7 +51,32 @@ function EditorStructure(obj) {
             _returnBody = createMainBody(_mainBody);
         }
         if (typeof _footer === 'object') {
-            createFooter(_footer);
+            _returnfooter = createFooter(_footer);
+        }
+    }
+
+    function createHeader(headObj) {
+        var _activitiOnClose = headObj.action;
+        var _header = document.createElement('div');
+        var _head = document.createElement('span');
+        var _closeBtn = document.createElement('span');
+        var _crossSymbol = document.createElement('a');
+
+        _header.setAttribute('class', 'editorHeader');
+        _crossSymbol.classList.add('close-thin');
+        if (!headObj.event) {
+            _crossSymbol.setAttribute('onclick', _activitiOnClose);
+        }
+        _closeBtn.classList.add('closeBtnContainer');
+        _head.classList.add('elName');
+        _head.innerText = headObj.name;
+        _closeBtn.appendChild(_crossSymbol);
+        _header.appendChild(_head);
+        _header.appendChild(_closeBtn);
+        return {
+            header: _header,
+            headName: _head,
+            closeBtn: _closeBtn
         }
     }
 
@@ -87,34 +113,34 @@ function EditorStructure(obj) {
         }
     }
 
-    function createHeader(headObj) {
-        var _activitiOnClose = headObj.action;
-        var _header = document.createElement('div');
-        var _head = document.createElement('span');
-        var _closeBtn = document.createElement('span');
-        var _crossSymbol = document.createElement('a');
+    function createFooter(footerObj){
+        var _footer = document.createElement('div');
+        _footer.classList.add('nvEditor-footer');
+    
+        for(var x in footerObj){
+            var _button = document.createElement('button');
+            _button.classList.add('nvEditor-btn');
+            _button.innerText = footerObj[x].name;
 
-        _header.setAttribute('class', 'editorHeader');
-        _crossSymbol.classList.add('close-thin');
-        if (!headObj.event) {
-            _crossSymbol.setAttribute('onclick', _activitiOnClose);
+            if(Object.keys(footerObj[x]).includes('event') && footerObj[x].event){
+                console.log(footerObj[x].event.event);
+                _button.addEventListener(footerObj[x].event.event, footerObj[x].event.action);
+            }
+            //push _button to array
+            _footerBtnArray.push(_button);
+            //append to footer
+            _footer.appendChild(_button);
         }
-        _closeBtn.classList.add('closeBtnContainer');
-        _head.classList.add('elName');
-        _head.innerText = headObj.name;
-        _closeBtn.appendChild(_crossSymbol);
-        _header.appendChild(_head);
-        _header.appendChild(_closeBtn);
         return {
-            header: _header,
-            headName: _head,
-            closeBtn: _closeBtn
+            footerArray :  _footerBtnArray,
+            footer : _footer
         }
     }
 
     return {
        header: _returnHead,
-       mainBody : _returnBody
+       mainBody: _returnBody,
+       footer: _returnfooter
     };
 
 }
