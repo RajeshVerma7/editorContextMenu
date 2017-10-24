@@ -96,6 +96,7 @@
     <script src="editorContainerStructure1.js" type="text/javascript"></script>
     <script>
         var node = document.createElement('span');
+        node.innerText = "Span";
 
         function ChangeImage(hostEl, targetEl) {
             this.hostEl = hostEl;
@@ -145,6 +146,9 @@
             console.log(this.targetEl);
             
         }
+        var closeMessage = function(){
+            console.log('close Event');
+        };
         var showMessage = function(){
             console.log('Save Event');
         }
@@ -156,7 +160,11 @@
         }
         var newObj = new EditorStructure({
             header: {
-                name: 'Rajesh'
+                name: 'Rajesh',
+                event: {
+                            event: 'onclick',
+                            action: 'closeMessage(true)'
+                        },
             },
             mainBody: {
                 options: [

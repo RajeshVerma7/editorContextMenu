@@ -10,7 +10,7 @@ function EditorStructure(obj) {
     var _footerBtnArray = [];
 
     if (obj && typeof obj === 'object') {
-        if(validateObj(obj)){
+        if (validateObj(obj)) {
             init();
         }
     } else {
@@ -22,24 +22,24 @@ function EditorStructure(obj) {
         //check obj has alleast 3 keys
         //maximum 3 keys (header, body, footer)
         //minimum 2 keys (header, body)
-        if(objKeyArray.length < 1 || objKeyArray.length > 3){
+        if (objKeyArray.length < 1 || objKeyArray.length > 3) {
             throw new Error("missing parameters...");
         }
 
         //check all three key is object
-        objKeyArray.forEach(function(key){
+        objKeyArray.forEach(function (key) {
             if (typeof key !== 'object' && !obj[key]) {
                 throw new Error("required parameters is not provided...");
             }
         });
-        if(objKeyArray.indexOf('header') === -1){
-            if(objKeyArray.indexOf('mainBody') === -1){
-                if(objKeyArray.indexOf('footer') === -1){
+        if (objKeyArray.indexOf('header') === -1) {
+            if (objKeyArray.indexOf('mainBody') === -1) {
+                if (objKeyArray.indexOf('footer') === -1) {
                     throw new Error("missing parameters...");
                 }
             }
         }
-        
+
         return obj;
     }
 
@@ -56,7 +56,6 @@ function EditorStructure(obj) {
     }
 
     function createHeader(headObj) {
-        var _activitiOnClose = headObj.action;
         var _header = document.createElement('div');
         var _head = document.createElement('span');
         var _closeBtn = document.createElement('span');
@@ -64,8 +63,8 @@ function EditorStructure(obj) {
 
         _header.setAttribute('class', 'editorHeader');
         _crossSymbol.classList.add('close-thin');
-        if (!headObj.event) {
-            _crossSymbol.setAttribute('onclick', _activitiOnClose);
+        if (headObj.event) {
+            _crossSymbol.setAttribute(headObj.event.event, headObj.event.action);
         }
         _closeBtn.classList.add('closeBtnContainer');
         _head.classList.add('elName');
@@ -80,11 +79,12 @@ function EditorStructure(obj) {
         }
     }
 
-    function createMainBody(bodyObj){
+    function createMainBody(bodyObj) {
         var _mainEditorBody = document.createElement('div');
         _mainEditorBody.classList.add('mainBody');
-        var _opt = bodyObj.options
-        for(var x=0; x < _opt.length; x++){
+        var _opt = bodyObj.options;
+        console.log(_opt);
+        for (var x = 0; x < _opt.length; x++) {
             var _options = document.createElement('div');
             _options.setAttribute('class', 'cursorPointer');
             var _optionsIconContainer = document.createElement('span');
@@ -98,32 +98,32 @@ function EditorStructure(obj) {
             _optionsText.innerText = _opt[x].name;
             _options.appendChild(_optionsText);
 
-            if(_opt[x].instance){
-                new _opt[x].instance.instanceClass(_options, _opt[x].instance.parameters[1]);
+            if (_opt[x].instance) {
+                var _args = _opt[x].instance.parameters[2] ? _opt[x].instance.parameters[2] : false;
+                new _opt[x].instance.instanceClass(_options, _opt[x].instance.parameters[1], _args);
             }
-            
+
             //push options to array
             _optionArray.push(_options);
             //append to main body
             _mainEditorBody.appendChild(_options);
         }
         return {
-            optArray :  _optionArray,
-            mainEditorBody : _mainEditorBody
+            optArray: _optionArray,
+            mainEditorBody: _mainEditorBody
         }
     }
 
-    function createFooter(footerObj){
+    function createFooter(footerObj) {
         var _footer = document.createElement('div');
         _footer.classList.add('nvEditor-footer');
-    
-        for(var x in footerObj){
+
+        for (var x in footerObj) {
             var _button = document.createElement('button');
             _button.classList.add('nvEditor-btn');
             _button.innerText = footerObj[x].name;
 
-            if(Object.keys(footerObj[x]).includes('event') && footerObj[x].event){
-                console.log(footerObj[x].event.event);
+            if (Object.keys(footerObj[x]).includes('event') && footerObj[x].event) {
                 _button.addEventListener(footerObj[x].event.event, footerObj[x].event.action);
             }
             //push _button to array
@@ -132,15 +132,15 @@ function EditorStructure(obj) {
             _footer.appendChild(_button);
         }
         return {
-            footerArray :  _footerBtnArray,
-            footer : _footer
+            footerArray: _footerBtnArray,
+            footer: _footer
         }
     }
 
     return {
-       header: _returnHead,
-       mainBody: _returnBody,
-       footer: _returnfooter
+        header: _returnHead,
+        mainBody: _returnBody,
+        footer: _returnfooter
     };
 
 }
